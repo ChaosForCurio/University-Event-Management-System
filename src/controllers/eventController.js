@@ -23,7 +23,13 @@ exports.getHome = (req, res) => {
     let filteredEvents = [...state.events];
 
     if (search) {
-        filteredEvents = filteredEvents.filter(e => e.title.toLowerCase().includes(search.toLowerCase()) || e.description.toLowerCase().includes(search.toLowerCase()));
+        const query = search.toLowerCase();
+        filteredEvents = filteredEvents.filter(e =>
+            e.title.toLowerCase().includes(query) ||
+            e.description.toLowerCase().includes(query) ||
+            e.category.toLowerCase().includes(query) ||
+            e.location.toLowerCase().includes(query)
+        );
     }
     if (category && category !== 'All') {
         filteredEvents = filteredEvents.filter(e => e.category === category);
@@ -71,6 +77,27 @@ exports.getCreateEvent = (req, res) => {
         currentUser: state.currentUser,
         categories: state.categories
     });
+};
+
+exports.getSettings = (req, res) => {
+    res.render('pages/settings', {
+        view: 'settings',
+        currentUser: state.currentUser
+    });
+};
+
+exports.postSettings = (req, res) => {
+    const { name, email, bio } = req.body;
+    if (name !== undefined) state.currentUser.name = name;
+    if (email !== undefined) state.currentUser.email = email;
+    if (bio !== undefined) state.currentUser.bio = bio;
+
+    const toastHtml = `<div hx-swap-oob="beforeend:#toast-container">` +
+        `<div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000); setTimeout(() => $el.remove(), 3500)" class="w-max">` +
+        `<div class="bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border border-emerald-500/20">` +
+        `<i data-lucide="check-circle" class="w-5 h-5"></i>` +
+        `<span class="font-bold text-sm">Settings saved successfully!</span></div></div></div>`;
+    res.send(toastHtml);
 };
 
 exports.postRSVP = (req, res, next) => {

@@ -16,8 +16,8 @@
             <% } else { %>
                 <% myRSVPs.forEach(event=> { %>
                     <div id="ticket-<%= event.id %>"
-                        class="bg-white rounded-3xl border border-slate-200 overflow-hidden flex flex-col md:flex-row shadow-sm">
-                        <div class="p-6 flex-1">
+                        class="bg-white rounded-3xl border border-slate-200 overflow-hidden flex flex-col sm:flex-row shadow-sm hover:border-indigo-100 transition-colors">
+                        <div class="p-5 sm:p-6 flex-1">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">

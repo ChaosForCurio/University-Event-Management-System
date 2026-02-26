@@ -1,5 +1,10 @@
 let state = {
-    currentUser: { role: 'student' },
+    currentUser: {
+        name: 'Student User',
+        email: 'student@uni.edu',
+        bio: '',
+        role: 'student'
+    },
     events: [
         { id: 1, title: "Spring Career Fair 2024", category: "Career", date: "24 MAR", location: "Grand Hall", attendees: 450, capacity: 500, description: "Connect with over 100 top companies looking for interns and full-time employees. Bring your resume and dress professionally!", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=2069&auto=format&fit=crop" },
         { id: 2, title: "AI Ethics Seminar", category: "Academic", date: "28 MAR", location: "Lec-102", attendees: 85, capacity: 100, description: "A deep dive into the moral implications of artificial intelligence in modern society. Guest speaker from OpenAI.", image: "https://images.unsplash.com/photo-1591115765373-520b7a0271d4?q=80&w=2070&auto=format&fit=crop" },

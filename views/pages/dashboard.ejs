@@ -15,22 +15,19 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <% stats.forEach(stat=> { %>
             <div
-                class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-indigo-100 transition-colors">
+                class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-indigo-100 transition-colors">
                 <div class="flex justify-between items-start mb-4">
-                    <div class="p-2 bg-indigo-50 rounded-xl">
-                        <i data-lucide="<%= stat.icon %>" class="text-indigo-600 w-5 h-5"></i>
+                    <div class="p-1.5 sm:p-2 bg-indigo-50 rounded-lg sm:rounded-xl">
+                        <i data-lucide="<%= stat.icon %>" class="text-indigo-600 w-4 h-4 sm:w-5 sm:h-5"></i>
                     </div>
-                    <span class="text-[10px] font-bold text-emerald-600">
-                        <%= stat.trend %>
-                    </span>
                 </div>
-                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">
+                <div class="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1">
                     <%= stat.label %>
                 </div>
-                <div class="text-3xl font-black text-slate-900">
+                <div class="text-xl sm:text-3xl font-black text-slate-900">
                     <%= stat.value %>
                 </div>
             </div>
@@ -39,7 +36,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content Area -->
-        <div class="lg:col-span-2 space-y-8">
+        <div class="lg:col-span-2 space-y-6 sm:space-y-8">
             <% if (currentUser.role==='organizer' ) { %>
                 <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
                     <div class="p-6 border-b border-slate-100 flex justify-between items-center">
@@ -80,11 +77,13 @@
                                                 <div class="text-sm font-bold">
                                                     <%= event.attendees %>
                                                 </div>
-                                                <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                                    <div class="bg-indigo-500 h-full"
-                                                        style="width: <%= Math.min((event.attendees / (event.capacity || 500) * 100), 100) %>%">
+                                                <% const attendanceRate=Math.floor(Math.min((event.attendees /
+                                                    (event.capacity || 500) * 100), 100)) %>
+                                                    <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                                        <div class="bg-indigo-500 h-full transition-all duration-500"
+                                                            style="width: <%= attendanceRate %>%">
+                                                        </div>
                                                     </div>
-                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
@@ -163,11 +162,13 @@
                                     <%= events.filter(e=> e.category === cat).length %> events
                                 </span>
                             </div>
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                <div class="bg-indigo-500 h-full transition-all duration-1000"
-                                    style="width: <%= (events.filter(e => e.category === cat).length / (events.length || 1) * 100) %>%">
+                            <% const distRate=Math.floor((events.filter(e=> e.category === cat).length / (events.length
+                                || 1) * 100)) %>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-indigo-500 h-full transition-all duration-700"
+                                        style="width: <%= distRate %>%">
+                                    </div>
                                 </div>
-                            </div>
                         </div>
                         <% }) %>
                 </div>
