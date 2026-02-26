@@ -1,0 +1,189 @@
+<div class="space-y-8">
+    <div class="flex items-center justify-between">
+        <h2 class="text-3xl font-bold">
+            <%= currentUser.role==='organizer' ? 'Organizer Dashboard' : 'Student Dashboard' %>
+        </h2>
+        <div class="flex items-center gap-2">
+            <button
+                class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors flex items-center gap-2">
+                <i data-lucide="download" class="w-3 h-3"></i> Export Report
+            </button>
+            <div class="text-sm text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-200 hidden sm:block">
+                Semester: <span class="font-bold text-indigo-600">Spring 2024</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <% stats.forEach(stat=> { %>
+            <div
+                class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-indigo-100 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-indigo-50 rounded-xl">
+                        <i data-lucide="<%= stat.icon %>" class="text-indigo-600 w-5 h-5"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-emerald-600">
+                        <%= stat.trend %>
+                    </span>
+                </div>
+                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">
+                    <%= stat.label %>
+                </div>
+                <div class="text-3xl font-black text-slate-900">
+                    <%= stat.value %>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content Area -->
+        <div class="lg:col-span-2 space-y-8">
+            <% if (currentUser.role==='organizer' ) { %>
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="font-bold text-lg">My Managed Events</h3>
+                        <a href="/create" class="text-indigo-600 text-sm font-bold">+ New</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 text-slate-400 text-[10px] font-bold uppercase">
+                                <tr>
+                                    <th class="px-6 py-4">Event</th>
+                                    <th class="px-6 py-4">Attendance</th>
+                                    <th class="px-6 py-4">Status</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <% events.forEach(event=> { %>
+                                    <tr id="dash-event-<%= event.id %>"
+                                        class="hover:bg-slate-50/50 transition-colors group">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-lg overflow-hidden bg-slate-100">
+                                                    <img src="<%= event.image %>" class="w-full h-full object-cover">
+                                                </div>
+                                                <div>
+                                                    <div class="font-bold text-sm text-slate-800">
+                                                        <%= event.title %>
+                                                    </div>
+                                                    <div class="text-xs text-slate-400">
+                                                        <%= event.date %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-2">
+                                                <div class="text-sm font-bold">
+                                                    <%= event.attendees %>
+                                                </div>
+                                                <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                                    <div class="bg-indigo-500 h-full"
+                                                        style="width: <%= Math.min((event.attendees / (event.capacity || 500) * 100), 100) %>%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span
+                                                class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-md">Live</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <div
+                                                class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button hx-delete="/htmx/events/<%= event.id %>"
+                                                    hx-target="#dash-event-<%= event.id %>" hx-swap="delete"
+                                                    hx-confirm="Delete this event permanently?"
+                                                    class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                                <button
+                                                    class="p-2 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors">
+                                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <% } else { %>
+                    <div class="bg-white rounded-3xl border border-slate-200 p-8">
+                        <h3 class="font-bold text-xl mb-6">Learning Journey</h3>
+                        <div
+                            class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
+                            <% if (myRSVPs.length===0) { %>
+                                <p class="text-slate-500">No events attended yet. Start your journey!</p>
+                                <% } %>
+                                    <% myRSVPs.forEach(ticket=> { %>
+                                        <div class="relative">
+                                            <div
+                                                class="absolute -left-8 top-1.5 w-7 h-7 bg-white border-4 border-indigo-500 rounded-full z-10">
+                                            </div>
+                                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                                <div class="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 class="font-bold text-slate-800">
+                                                            <%= ticket.title %>
+                                                        </h4>
+                                                        <p class="text-xs text-slate-500 mt-1">Registered on <%=
+                                                                ticket.date %>
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase">
+                                                        <%= ticket.category %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                        </div>
+                    </div>
+                    <% } %>
+        </div>
+
+        <!-- Sidebar Content -->
+        <div class="space-y-8">
+            <div class="bg-white p-8 rounded-3xl border border-slate-200">
+                <h3 class="font-bold text-xl mb-6">Event Distribution</h3>
+                <div class="space-y-4">
+                    <% categories.filter(c=> c !== 'All').forEach(cat => { %>
+                        <div>
+                            <div class="flex justify-between text-xs mb-2">
+                                <span class="font-bold text-slate-600">
+                                    <%= cat %>
+                                </span>
+                                <span class="text-slate-400">
+                                    <%= events.filter(e=> e.category === cat).length %> events
+                                </span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-indigo-500 h-full transition-all duration-1000"
+                                    style="width: <%= (events.filter(e => e.category === cat).length / (events.length || 1) * 100) %>%">
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+            <div class="bg-indigo-600 p-8 rounded-3xl text-white relative overflow-hidden">
+                <div class="relative z-10">
+                    <h3 class="font-bold text-xl mb-2">Community Rank</h3>
+                    <p class="text-indigo-100 text-sm mb-6">
+                        <%= currentUser.role==='student' ? 'Top 15% Attendee' : 'Rising Star Organizer' %>
+                    </p>
+                    <button class="bg-white text-indigo-600 px-6 py-2.5 rounded-xl font-bold text-sm">View
+                        Leaderboard</button>
+                </div>
+                <i data-lucide="award" class="absolute -bottom-4 -right-4 w-32 h-32 text-indigo-500/30 -rotate-12"></i>
+            </div>
+        </div>
+    </div>
+</div>

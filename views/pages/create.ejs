@@ -1,0 +1,74 @@
+<div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold">Post New Event</h2>
+        <p class="text-slate-500 mt-2">Fill in the details to announce your event to the campus community.</p>
+    </div>
+
+    <form hx-post="/htmx/events" class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-slate-700 mb-2">Event Title</label>
+                <input name="title" required type="text" placeholder="e.g. Hackathon 2024"
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Category</label>
+                <div class="relative">
+                    <select name="category"
+                        class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all appearance-none">
+                        <% categories.filter(c=> c !== 'All').forEach(cat => { %>
+                            <option value="<%= cat %>">
+                                <%= cat %>
+                            </option>
+                            <% }) %>
+                    </select>
+                    <i data-lucide="chevron-down"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Date</label>
+                <input name="date" required type="date"
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all">
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-slate-700 mb-2">Location</label>
+                <div class="relative">
+                    <i data-lucide="map-pin"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                    <input name="location" required type="text" placeholder="e.g. Science Wing, Room 402"
+                        class="w-full pl-12 pr-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Capacity</label>
+                <input name="capacity" type="number" placeholder="Unlimited"
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Event Image URL (Optional)</label>
+                <input name="image" type="url" placeholder="https://..."
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all">
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-slate-700 mb-2">Description</label>
+                <textarea name="description" required rows="5" placeholder="Tell students what to expect..."
+                    class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all resize-none"></textarea>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-100">
+            <a href="/"
+                class="flex-1 px-8 py-4 rounded-2xl border border-slate-200 font-bold text-slate-600 hover:bg-slate-50 transition-colors text-center">Cancel</a>
+            <button type="submit"
+                class="flex-2 px-8 py-4 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all transform active:scale-95">Publish
+                Event</button>
+        </div>
+    </form>
+</div>

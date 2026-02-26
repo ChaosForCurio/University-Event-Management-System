@@ -1,0 +1,75 @@
+<div class="space-y-6">
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl font-bold">My Tickets</h2>
+        <a href="/" class="text-indigo-600 font-medium flex items-center gap-1">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Back to Feed
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <% if (myRSVPs.length===0) { %>
+            <div class="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+                <p class="text-slate-500">You don't have any tickets yet.</p>
+                <a href="/" class="mt-4 text-indigo-600 font-bold underline">Explore events</a>
+            </div>
+            <% } else { %>
+                <% myRSVPs.forEach(event=> { %>
+                    <div id="ticket-<%= event.id %>"
+                        class="bg-white rounded-3xl border border-slate-200 overflow-hidden flex flex-col md:flex-row shadow-sm">
+                        <div class="p-6 flex-1">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">
+                                        <%= event.category %>
+                                    </span>
+                                    <h4 class="font-bold text-xl">
+                                        <%= event.title %>
+                                    </h4>
+                                </div>
+                                <div class="bg-slate-50 p-2 rounded-lg text-center min-w-[60px]">
+                                    <div class="text-lg font-black leading-tight">
+                                        <%= event.date.split(' ')[0] %></div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase"><%= event.date.split(' ')[1] %></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-slate-500 text-sm">
+                                <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i>
+                                <span><%= event.location %></span>
+                            </div>
+                            <div class="flex items-center text-slate-500 text-sm">
+                                <i data-lucide="clock" class="w-4 h-4 mr-2"></i>
+                                <span>Starts at 09:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <button 
+                                hx-post="/htmx/rsvp/<%= event.id %>"
+                                hx-target="#ticket-<%= event.id %>"
+                                hx-swap="delete"
+                                hx-confirm="Are you sure you want to cancel this ticket?"
+                                class="text-red-500 text-xs font-bold hover:bg-red-50 px-3 py-1 rounded-lg transition-colors"
+                            >Cancel Ticket</button>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border-t md:border-t-0 md:border-l border-slate-200 p-6 flex items-center justify-center bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px]">
+                        <div class="text-center">
+                            <div class="bg-white p-2 rounded-lg shadow-sm mb-2 inline-block">
+                                <div class="grid grid-cols-4 gap-1 w-16 h-16 opacity-80">
+                                    <% for(let i=0; i<16; i++) { %>
+                                        <div class="<%= Math.random() > 0.5 ? ' bg-slate-800' : 'bg-transparent' %>">
+                                    </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="text-[10px] font-mono text-slate-400">UE-2024-<%= event.id.toString().slice(-4)
+                                    %>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    <% }) %>
+        <% } %>
+</div>
+</div>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniEvents | University Event Management System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Alpine.js for State Management (UI Only) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- HTMX for server interactions -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200"
+        x-data="{ mobileMenu: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <a href="/" class="flex items-center space-x-2 cursor-pointer">
+                    <div class="bg-indigo-600 p-2 rounded-lg">
+                        <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span
+                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">UniEvents</span>
+                </a>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/"
+                        class="<%= view === 'home' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-600 hover:text-indigo-600' %> font-medium py-5 transition-all">Discover</a>
+                    <a href="/my-events"
+                        class="<%= view === 'my-events' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-600 hover:text-indigo-600' %> font-medium py-5 transition-all">My
+                        Tickets</a>
+                    <a href="/dashboard"
+                        class="<%= view === 'dashboard' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-600 hover:text-indigo-600' %> font-medium py-5 transition-all">Dashboard</a>
+
+                    <div class="h-6 w-px bg-slate-200"></div>
+
+                    <a href="/create"
+                        class="<%= view === 'create' ? 'bg-indigo-700' : 'bg-indigo-600' %> text-white px-5 py-2.5 rounded-full font-bold hover:bg-indigo-700 transition-shadow shadow-lg shadow-indigo-100 flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Post Event
+                    </a>
+
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open"
+                            class="flex items-center gap-2 bg-slate-100 p-1 pr-3 rounded-full hover:bg-slate-200 transition-colors">
+                            <img src="https://i.pravatar.cc/100?u=<%= currentUser.role %>"
+                                class="w-8 h-8 rounded-full border border-white">
+                            <span class="text-xs font-bold capitalize">
+                                <%= currentUser.role %>
+                            </span>
+                        </button>
+                        <div x-show="open" @click.away="open = false" x-cloak
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 p-2 z-50">
+                            <button hx-post="/htmx/role" hx-vals='{"role": "student"}'
+                                class="w-full text-left px-4 py-2 hover:bg-indigo-50 rounded-lg text-sm transition-colors flex items-center justify-between">
+                                Student Mode
+                                <% if (currentUser.role==='student' ) { %><i data-lucide="check"
+                                        class="w-4 h-4 text-indigo-600"></i>
+                                    <% } %>
+                            </button>
+                            <button hx-post="/htmx/role" hx-vals='{"role": "organizer"}'
+                                class="w-full text-left px-4 py-2 hover:bg-indigo-50 rounded-lg text-sm transition-colors flex items-center justify-between">
+                                Organizer Mode
+                                <% if (currentUser.role==='organizer' ) { %><i data-lucide="check"
+                                        class="w-4 h-4 text-indigo-600"></i>
+                                    <% } %>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center md:hidden">
+                    <button @click="mobileMenu = !mobileMenu" class="text-slate-600">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenu" x-cloak class="md:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-4">
+            <a href="/" class="block w-full text-left font-medium text-slate-700">Discover</a>
+            <a href="/my-events" class="block w-full text-left font-medium text-slate-700">My Tickets</a>
+            <a href="/create" class="block w-full text-left font-medium text-indigo-600">Host Event</a>
+        </div>
+    </nav>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <%- body %>
+    </main>
+
+    <!-- Notification Container -->
+    <div id="toast-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] flex flex-col gap-2"></div>
+
+    <script>
+        document.body.addEventListener('htmx:afterOnLoad', function (evt) {
+            lucide.createIcons();
+        });
+        window.addEventListener('load', function () {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

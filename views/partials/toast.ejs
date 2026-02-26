@@ -1,0 +1,18 @@
+<div x-data="{ show: true }" x-show="show"
+    x-init="setTimeout(() => show = false, 4000); setTimeout(() => $el.remove(), 4500)"
+    x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4"
+    x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 transform translate-y-0"
+    x-transition:leave-end="opacity-0 transform translate-y-4" class="w-max max-w-sm">
+    <div
+        class="bg-slate-900 border-white/10 text-white px-6 py-4 rounded-3xl shadow-2xl flex items-center gap-4 border">
+        <div class="bg-indigo-500/20 text-indigo-400 p-2 rounded-xl">
+            <i data-lucide="info" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <div class="text-sm font-bold">
+                <%= message %>
+            </div>
+        </div>
+    </div>
+</div>

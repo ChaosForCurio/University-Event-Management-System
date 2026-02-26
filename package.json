@@ -1,0 +1,26 @@
+{
+  "name": "university-event-management-system",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000U\u0000n\u0000i\u0000v\u0000e\u0000r\u0000s\u0000i\u0000t\u0000y\u0000-\u0000E\u0000v\u0000e\u0000n\u0000t\u0000-\u0000M\u0000a\u0000n\u0000a\u0000g\u0000e\u0000m\u0000e\u0000n\u0000t\u0000-\u0000S\u0000y\u0000s\u0000t\u0000e\u0000m\u0000\r\u0000 \u0000",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChaosForCurio/University-Event-Management-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ChaosForCurio/University-Event-Management-System/issues"
+  },
+  "homepage": "https://github.com/ChaosForCurio/University-Event-Management-System#readme",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1"
+  }
+}
